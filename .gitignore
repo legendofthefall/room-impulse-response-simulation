@@ -1,0 +1,47 @@
+# Ignore auto-generated files and local settings
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+MemoryCaptures/
+
+# User-specific files
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# Unity-generated files
+*.unitypackage
+*.prefab.meta
+*.asset.meta
+
+# VSCode settings
+.vscode/
+
+# Rider settings
+.idea/
+*.sln.iml
+
+# Other files
+*.DS_Store
+*.apk
+*.ipa
+*.tmp
+*.log
+*.bak
+*.swp
+
+# Crash Reports
+*.stackdump
+
+# Visual Studio Code workspace
+*.code-workspace
