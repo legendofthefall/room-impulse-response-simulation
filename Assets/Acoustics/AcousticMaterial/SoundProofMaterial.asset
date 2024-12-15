@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f66f85b9a9408443a859cf4e3355620, type: 3}
   m_Name: SoundProofMaterial
   m_EditorClassIdentifier: 
-  lowFrequencyAbsorption: 0.1
-  midFrequencyAbsorption: 0.3
-  highFrequencyAbsorption: 0.5
-  scatteringCoefficient: 0.1
+  lowFrequencyAbsorption: 0.7
+  midFrequencyAbsorption: 0.85
+  highFrequencyAbsorption: 0.9
+  scatteringCoefficient: 0.4
   isReflective: 0

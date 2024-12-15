@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ConcreteMaterial
   m_EditorClassIdentifier: 
   lowFrequencyAbsorption: 0.1
-  midFrequencyAbsorption: 0.3
-  highFrequencyAbsorption: 0.5
+  midFrequencyAbsorption: 0.2
+  highFrequencyAbsorption: 0.3
   scatteringCoefficient: 0.1
-  isReflective: 0
+  isReflective: 1
