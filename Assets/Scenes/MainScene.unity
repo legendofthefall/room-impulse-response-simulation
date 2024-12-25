@@ -2940,6 +2940,7 @@ MonoBehaviour:
   numberOfRays: 5
   maxReflections: 5
   speedOfSound: 343
+  initialEnergy: 1
 --- !u!4 &467672365
 Transform:
   m_ObjectHideFlags: 0
