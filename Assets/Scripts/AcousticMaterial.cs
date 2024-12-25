@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Materials/AcousticMaterial")]
+[CreateAssetMenu(menuName = "Acoustics/AcousticMaterial")]
 public class AcousticMaterial : ScriptableObject
 {
     [Header("Frequency Absorption Coefficients")]
