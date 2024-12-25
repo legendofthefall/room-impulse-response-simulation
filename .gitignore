@@ -21,8 +21,6 @@ MemoryCaptures/
 
 # Unity-generated files
 *.unitypackage
-*.prefab.meta
-*.asset.meta
 
 # VSCode settings
 .vscode/
