@@ -6,6 +6,10 @@ TagManager:
   tags:
   - SoundSource
   - Receiver
+  - Room_Empty
+  - Room_Furnished
+  - Room_Treated
+  - Room_Untreated
   layers:
   - Default
   - TransparentFX
