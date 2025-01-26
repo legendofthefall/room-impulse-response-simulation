@@ -1,14 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
 
 public class RayTracing : MonoBehaviour
 {
     [Header("Ray Tracing Parameters")]
     public float rayLength = 50f;
-    public int numberOfRays = 50;
-    public int maxReflections = 5;
-    public float speedOfSound = 343f;
-    public float initialEnergy = 1.0f;
+    public int numberOfRays = 500;  // Increased for more accurate reflections
+    public int maxReflections = 35; // Allow more bounces for room acoustics
+    public float speedOfSound = 343f;  // Speed of sound in air (m/s)
+    public float initialEnergy = 2.0f;
     public bool logToFile = true;
 
     private List<string> rayData = new List<string>();
@@ -25,22 +26,23 @@ public class RayTracing : MonoBehaviour
         GameObject[] sources = GameObject.FindGameObjectsWithTag("SoundSource");
         GameObject[] receivers = GameObject.FindGameObjectsWithTag("Receiver");
 
+        Debug.Log($"🔍 Found {sources.Length} Sound Sources and {receivers.Length} Receivers.");
+
         foreach (GameObject source in sources)
         {
             foreach (GameObject receiver in receivers)
             {
-                Debug.Log($"Tracing rays from {source.name} to {receiver.name}");
-                EmitRaysFromSourceToReceiver(source.transform.position, receiver.transform.position);
+                string roomType = GetRoomType(source.transform.position, receiver.transform.position);
+                Debug.Log($"📌 Room Classification: {roomType} for Ray {source.name} → {receiver.name}");
+
+                EmitRaysFromSourceToReceiver(source.transform.position, receiver.transform.position, roomType);
             }
         }
     }
 
-    void EmitRaysFromSourceToReceiver(Vector3 sourcePosition, Vector3 receiverPosition)
+    void EmitRaysFromSourceToReceiver(Vector3 sourcePosition, Vector3 receiverPosition, string roomType)
     {
-        string roomType = GetRoomType(sourcePosition, receiverPosition);
-
-        // ✅ Skip saving unknown or extra room categories
-        if (roomType == "Unknown Room" || roomType.Contains("Extended") || roomType.Contains("Intermediate"))
+        if (roomType == "Unknown Room")
         {
             Debug.LogWarning($"⚠️ Skipping Unclassified Room - Source: {sourcePosition}, Receiver: {receiverPosition}");
             return;
@@ -53,20 +55,22 @@ public class RayTracing : MonoBehaviour
             RaycastHit hit;
 
             float totalTravelTime = 0f;
+            float travelDistance = 0f;
             float energy = initialEnergy;
+            bool rayHitSomething = false;
 
             for (int reflection = 0; reflection < maxReflections; reflection++)
             {
                 if (Physics.Raycast(ray, out hit, rayLength))
                 {
-                    float travelDistance = Vector3.Distance(ray.origin, hit.point);
-                    float travelTime = travelDistance / speedOfSound;
-                    totalTravelTime += travelTime;
+                    rayHitSomething = true;
+                    float segmentDistance = Vector3.Distance(ray.origin, hit.point);
+                    travelDistance += segmentDistance;
+                    totalTravelTime = travelDistance / speedOfSound;
 
                     if (hit.collider.CompareTag("Receiver"))
                     {
-                        Debug.DrawLine(ray.origin, hit.point, Color.green, 5.0f);
-                        rayData.Add($"{roomType}, {sourcePosition.x}, {sourcePosition.y}, {sourcePosition.z}, {receiverPosition.x}, {receiverPosition.y}, {receiverPosition.z}, {reflection}, {hit.point.x}, {hit.point.y}, {hit.point.z}, {totalTravelTime:F4}, {energy:F2}");
+                        SaveRayData(roomType, sourcePosition, receiverPosition, reflection, hit.point, totalTravelTime, energy);
                         break;
                     }
 
@@ -74,70 +78,61 @@ public class RayTracing : MonoBehaviour
                     if (materialHolder != null && materialHolder.acousticMaterial != null)
                     {
                         AcousticMaterial material = materialHolder.acousticMaterial;
-                        float absorption = GetFrequencyAbsorption(material);
-                        energy *= (1 - absorption);
+                        float absorption = GetFrequencyAbsorption(material, reflection);
 
-                        if (energy < 0.01f)
-                        {
-                            Debug.Log("Ray energy too low, stopping reflection.");
-                            break;
-                        }
+                        // 📌 Improved exponential energy decay model
+                        float absorptionFactor = Mathf.Lerp(1.0f, 4.0f, absorption);
+                        energy *= Mathf.Exp(-absorptionFactor * (reflection + 1) * 0.8f);
 
-                        rayData.Add($"{roomType}, {sourcePosition.x}, {sourcePosition.y}, {sourcePosition.z}, {receiverPosition.x}, {receiverPosition.y}, {receiverPosition.z}, {reflection}, {hit.point.x}, {hit.point.y}, {hit.point.z}, {totalTravelTime:F4}, {energy:F2}");
-                        Color rayColor = Color.Lerp(Color.yellow, Color.red, energy);
-                        Debug.DrawLine(ray.origin, hit.point, rayColor, 5.0f);
+                        if (energy < 0.002f) break; // Stop if energy is too low
+
+                        SaveRayData(roomType, sourcePosition, receiverPosition, reflection, hit.point, totalTravelTime, energy);
 
                         if (Random.value < material.scatteringCoefficient)
                         {
-                            Vector3 scatterDirection = Random.onUnitSphere;
-                            ray = new Ray(hit.point, scatterDirection);
+                            ray = new Ray(hit.point, Random.onUnitSphere);
                         }
                         else if (material.isReflective)
                         {
-                            Vector3 reflectionDirection = Vector3.Reflect(ray.direction, hit.normal);
-                            ray = new Ray(hit.point, reflectionDirection);
+                            ray = new Ray(hit.point, Vector3.Reflect(ray.direction, hit.normal));
                         }
-                        else
-                        {
-                            break;
-                        }
+                        else break;
                     }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    Debug.Log("Ray escaped the room boundary.");
-                    break;
+                    else break;
                 }
             }
         }
     }
 
-    string GetRoomType(Vector3 source, Vector3 receiver)
+    float GetFrequencyAbsorption(AcousticMaterial material, int reflection)
     {
-        // ✅ STRICTLY CLASSIFYING ONLY EXISTING ROOMS
-        if (source.x < 5 && receiver.x < 5) return "Empty Room";
-        if (source.x > 15 && receiver.x > 15) return "Furnished Room";
-        if (source.z < -10 && receiver.z < -10) return "Treated Room";
-        if (source.x < 10 && receiver.z > 0) return "Large Untreated Room";
-
-        // ✅ Discard Unclassified Rooms
-        Debug.LogWarning($"⚠️ UNKNOWN ROOM DETECTED - Source: {source}, Receiver: {receiver}");
-        return "Unknown Room";
+        if (reflection < 5) return material.lowFrequencyAbsorption;
+        if (reflection < 15) return material.midFrequencyAbsorption;
+        return material.highFrequencyAbsorption;
     }
 
-    float GetFrequencyAbsorption(AcousticMaterial material)
+    void SaveRayData(string roomType, Vector3 sourcePos, Vector3 receiverPos, int reflection, Vector3 hitPoint, float travelTime, float energy)
     {
-        return material.midFrequencyAbsorption;
+        rayData.Add($"{roomType}, {sourcePos.x}, {sourcePos.y}, {sourcePos.z}, " +
+                    $"{receiverPos.x}, {receiverPos.y}, {receiverPos.z}, " +
+                    $"{reflection}, {hitPoint.x}, {hitPoint.y}, {hitPoint.z}, {travelTime:F4}, {energy:F4}");
+    }
+
+    string GetRoomType(Vector3 source, Vector3 receiver)
+    {
+        if (source.x < 5 && receiver.x < 5) return "Empty Room";
+        if (source.x > 10 && receiver.x > 10) return "Furnished Room";
+        if (source.z < -5 && receiver.z < -5) return "Treated Room";
+        if (source.x < 10 && receiver.z > 0) return "Large Untreated Room";
+
+        Debug.LogWarning($"⚠️ UNKNOWN ROOM DETECTED - Source: {source}, Receiver: {receiver}");
+        return "Unknown Room";
     }
 
     void SaveDataToFile()
     {
         string filePath = Application.dataPath + "/RayData.txt";
-        System.IO.File.WriteAllLines(filePath, rayData);
-        Debug.Log($"Ray data saved to: {filePath}");
+        File.WriteAllLines(filePath, rayData);
+        Debug.Log($"📁 Ray data saved to: {filePath}");
     }
 }
