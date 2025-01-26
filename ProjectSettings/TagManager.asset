@@ -10,6 +10,7 @@ TagManager:
   - Room_Furnished
   - Room_Treated
   - Room_Untreated
+  - Environment
   layers:
   - Default
   - TransparentFX
