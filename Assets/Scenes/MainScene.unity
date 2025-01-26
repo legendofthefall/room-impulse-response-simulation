@@ -2980,11 +2980,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c73be40ef6fa423438f27f9804a306f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayLength: 50
-  numberOfRays: 100
-  maxReflections: 15
+  rayLength: 70
+  numberOfRays: 400
+  maxReflections: 35
   speedOfSound: 343
-  initialEnergy: 1
+  initialEnergy: 2
   logToFile: 1
 --- !u!4 &467672365
 Transform:
