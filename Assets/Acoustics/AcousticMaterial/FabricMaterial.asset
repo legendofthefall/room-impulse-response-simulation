@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f66f85b9a9408443a859cf4e3355620, type: 3}
   m_Name: FabricMaterial
   m_EditorClassIdentifier: 
-  lowFrequencyAbsorption: 0.5
-  midFrequencyAbsorption: 0.7
-  highFrequencyAbsorption: 0.8
-  scatteringCoefficient: 0.3
+  lowFrequencyAbsorption: 0.9
+  midFrequencyAbsorption: 0.95
+  highFrequencyAbsorption: 0.98
+  scatteringCoefficient: 0.7
   isReflective: 1

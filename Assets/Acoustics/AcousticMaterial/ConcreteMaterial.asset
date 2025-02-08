@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f66f85b9a9408443a859cf4e3355620, type: 3}
   m_Name: ConcreteMaterial
   m_EditorClassIdentifier: 
-  lowFrequencyAbsorption: 0.1
-  midFrequencyAbsorption: 0.2
-  highFrequencyAbsorption: 0.3
-  scatteringCoefficient: 0.1
+  lowFrequencyAbsorption: 0.4
+  midFrequencyAbsorption: 0.5
+  highFrequencyAbsorption: 0.75
+  scatteringCoefficient: 0.5
   isReflective: 1
