@@ -2981,8 +2981,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rayLength: 70
-  numberOfRays: 400
-  maxReflections: 35
+  numberOfRays: 50
+  maxReflections: 10
   speedOfSound: 343
   initialEnergy: 2
   logToFile: 1
@@ -4248,7 +4248,7 @@ PrefabInstance:
     - target: {fileID: 5685511726539692444, guid: b7c1d7bef3c9c8444a9260a8cdc9e891,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.92
+      value: -3.16
       objectReference: {fileID: 0}
     - target: {fileID: 5685511726539692444, guid: b7c1d7bef3c9c8444a9260a8cdc9e891,
         type: 3}
@@ -4258,7 +4258,7 @@ PrefabInstance:
     - target: {fileID: 5685511726539692444, guid: b7c1d7bef3c9c8444a9260a8cdc9e891,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.8
+      value: -2.86
       objectReference: {fileID: 0}
     - target: {fileID: 5685511726539692444, guid: b7c1d7bef3c9c8444a9260a8cdc9e891,
         type: 3}

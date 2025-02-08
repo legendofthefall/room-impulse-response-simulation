@@ -1,16 +1,16 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Acoustics/AcousticMaterial")]
+[System.Serializable]
 public class AcousticMaterial : ScriptableObject
 {
-    [Header("Frequency Absorption Coefficients")]
-    [Range(0, 1)] public float lowFrequencyAbsorption = 0.1f;
-    [Range(0, 1)] public float midFrequencyAbsorption = 0.3f;
-    [Range(0, 1)] public float highFrequencyAbsorption = 0.5f;
-
-    [Header("Scattering Coefficient")]
-    [Range(0, 1)] public float scatteringCoefficient = 0.1f;
-
-    [Header("Reflectivity")]
-    public bool isReflective; // If true, the surface strongly reflects sound.
+    public string materialName;
+    
+    // Absorption coefficients for octave bands (125Hz, 250Hz, 500Hz, 1000Hz, 2000Hz, 4000Hz)
+    public float[] absorptionCoefficients = new float[6];
+    
+    // Scattering coefficient (0 = no scattering, 1 = full diffusion)
+    public float scatteringCoefficient = 0.5f;
+    
+    // Reflectivity flag for highly reflective surfaces
+    public bool isReflective = false;
 }
