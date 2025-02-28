@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f66f85b9a9408443a859cf4e3355620, type: 3}
   m_Name: GlassMaterial
   m_EditorClassIdentifier: 
-  lowFrequencyAbsorption: 0.2
-  midFrequencyAbsorption: 0.3
-  highFrequencyAbsorption: 0.6
-  scatteringCoefficient: 0.005
+  materialName: 
+  absorptionCoefficients:
+  - 0.1
+  - 0.05
+  - 0.03
+  - 0.02
+  - 0.02
+  - 0.02
+  scatteringCoefficient: 0.05
   isReflective: 1
