@@ -1209,6 +1209,7 @@ GameObject:
   - component: {fileID: 980880142}
   - component: {fileID: 980880141}
   - component: {fileID: 980880140}
+  - component: {fileID: 980880144}
   m_Layer: 0
   m_Name: Wall_Back
   m_TagString: Environment
@@ -1315,6 +1316,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 980880138}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &980880144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 980880138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e829c87dc2a2ed2419c5f67848317fe4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  material: {fileID: 11400000, guid: a086f686223eed942816c70be67841b0, type: 2}
+  exportAllChildren: 0
+  terrainSimplificationLevel: 0
 --- !u!1 &1021191437
 GameObject:
   m_ObjectHideFlags: 0
@@ -2186,7 +2202,7 @@ Transform:
   m_GameObject: {fileID: 2096027633}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.421, y: 1.5, z: 1.271}
+  m_LocalPosition: {x: 1.62, y: 1.5, z: 0.04}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2274,7 +2290,7 @@ GameObject:
   - component: {fileID: 2106005005}
   - component: {fileID: 2106005004}
   m_Layer: 0
-  m_Name: RayCastingManager
+  m_Name: Ray Casting Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
