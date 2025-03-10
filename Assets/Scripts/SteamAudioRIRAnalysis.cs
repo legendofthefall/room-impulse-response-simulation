@@ -9,6 +9,8 @@ public class SteamAudioRIRAnalysis : MonoBehaviour
 {
     public SteamAudioSource steamAudioSource;
     private List<float> rirSamples = new List<float>();
+    private UnityEngine.Vector3 lastReceiverPosition; // Explicitly using UnityEngine.Vector3
+    private const float movementThreshold = 0.05f; // Define a threshold to avoid minor changes
 
     void Start()
     {
@@ -21,8 +23,22 @@ public class SteamAudioRIRAnalysis : MonoBehaviour
             return;
         }
 
-        UnityEngine.Debug.Log("🔍 Extracting RIR...");
+        lastReceiverPosition = steamAudioSource.transform.position; // Track initial position
+        UnityEngine.Debug.Log("🔍 Extracting Initial RIR...");
         ExtractImpulseResponse();
+    }
+
+    void Update()
+    {
+        // Detect receiver movement based on a threshold
+        float movementDistance = UnityEngine.Vector3.Distance(steamAudioSource.transform.position, lastReceiverPosition);
+
+        if (movementDistance > movementThreshold)
+        {
+            UnityEngine.Debug.Log($"🔄 Receiver moved ({movementDistance}m). Recomputing RIR...");
+            ExtractImpulseResponse();
+            lastReceiverPosition = steamAudioSource.transform.position;
+        }
     }
 
     void ExtractImpulseResponse()
@@ -95,7 +111,7 @@ public class SteamAudioRIRAnalysis : MonoBehaviour
 
     void RunPythonPlot()
     {
-        string pythonPath = "/usr/bin/python3"; // Explicitly use Python 3 on macOS
+        string pythonPath = "/usr/bin/python3"; // Explicitly use Python 3 on macOS/Linux
         string pythonScriptPath = Path.Combine(Application.dataPath, "PlotEDC.py");
 
         if (!File.Exists(pythonScriptPath))
